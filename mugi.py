@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from bluepy.btle import Scanner, DefaultDelegate, Peripheral, ADDR_TYPE_RANDOM
+from bluepy.btle import Scanner, DefaultDelegate, Peripheral, ADDR_TYPE_RANDOM, BTLEException
 
 def putimage(addr,image):
     #  line below needs to be changed to use your mugs MAC address
@@ -18,12 +18,12 @@ def putimage(addr,image):
             # last one may be too short
             while len(data) < 20:
                 data.append(0xFF)
-            characteristic.write(data, withResponse=True)
+            characteristic.write(data, withResponse=False)
             index = index + 20
     
         # this one is write without response because it fails if response
         # is required. Image is written anyway 
-        characteristic.write(bytes.fromhex('64'), withResponse=False)
+        characteristic.write(bytes.fromhex('64'), withResponse=True)
         peripheral.disconnect()
     except (BTLEException):
         print("Write failed")
